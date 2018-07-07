@@ -19,45 +19,52 @@ class MyApp extends StatelessWidget {
         appBar: new AppBar(
           title: new Text('cnBeta 资讯'),
         ),
-        body: FutureBuilder<NewsItem>(
-          future: fetchNews(),
-          builder: (context, snapshot) {
-            if (snapshot.hasData) {
-              // return Text(snapshot.data.title);
-              return new ListView(
-                children: <Widget>[
-                  new ListTile(
-                    title: new Text(snapshot.data.title),
-                    subtitle: new Text(snapshot.data.inputtime),
-                    trailing: Image.network(snapshot.data.thumb),
-                  ),
-                ],
-              );
-            } else if (snapshot.hasError) {
-              return Text("${snapshot.error}");
-            }
-            return CircularProgressIndicator();
-          },
-        ),
+        body: new Content(),
       ),
     );
   }
 }
 
-class Content extends StatelessWidget {
+class Content extends StatefulWidget {
+  @override
+  createState() => new ContentState();
+}
+
+class ContentState extends State<Content> {
+  final newsList = <NewsItem>[];
+
+  // for (var news in items) {
+
+  // };
+
   @override
   Widget build(BuildContext context) {
-    return new Text('news');
+    return new ListView.builder(
+      itemBuilder: (context, i) {
+        if (i.isOdd) return new Divider();
+        final index = i ~/ 2;
+        if (index >= newsList.length) {
+          fetchNews(newsList);
+        }
+        return new ListTile(
+          title: new Text(newsList[index].title),
+          subtitle: new Text(newsList[index].inputtime),
+          trailing: Image.network(newsList[index].thumb),
+        );
+      },
+    );
   }
 }
 
-Future<NewsItem> fetchNews() async {
+fetchNews(List<NewsItem> result) async {
   final response =
       await http.get('https://m.cnbeta.com/touch/default/timeline.json');
 
   if (response.statusCode == 200) {
     // If server returns an OK response, parse the JSON
-    return NewsItem.fromJson(json.decode(response.body)['result']['list'][0]);
+    for (var item in json.decode(response.body)['result']['list']) {
+      result.add(NewsItem.fromJson(item));
+    }
   } else {
     // If that response was not OK, throw an error.
     throw Exception('Failed to load news');

@@ -31,11 +31,8 @@ class Content extends StatefulWidget {
 }
 
 class ContentState extends State<Content> {
-  final newsList = <NewsItem>[];
-
-  // for (var news in items) {
-
-  // };
+  final _newsList = <NewsItem>[];
+  int _page = 1;
 
   @override
   Widget build(BuildContext context) {
@@ -43,30 +40,33 @@ class ContentState extends State<Content> {
       itemBuilder: (context, i) {
         if (i.isOdd) return new Divider();
         final index = i ~/ 2;
-        if (index >= newsList.length) {
-          fetchNews(newsList);
+        if (index >= _newsList.length) {
+          fetchNews(_newsList, _page++);
         }
         return new ListTile(
-          title: new Text(newsList[index].title),
-          subtitle: new Text(newsList[index].inputtime),
-          trailing: Image.network(newsList[index].thumb),
+          title: new Text(_newsList[index].title),
+          subtitle: new Text(_newsList[index].inputtime),
+          trailing: Image.network(_newsList[index].thumb),
         );
       },
     );
   }
 }
 
-fetchNews(List<NewsItem> result) async {
-  final response =
-      await http.get('https://m.cnbeta.com/touch/default/timeline.json');
+fetchNews(List<NewsItem> result, int page) async {
+  String url = 'https://m.cnbeta.com/touch/default/timeline.json?page=' +
+      page.toString();
+  if (page == 1) {
+    url = 'https://m.cnbeta.com/touch/default/timeline.json';
+  }
+  print(url);
+  final response = await http.get(url);
 
   if (response.statusCode == 200) {
-    // If server returns an OK response, parse the JSON
     for (var item in json.decode(response.body)['result']['list']) {
       result.add(NewsItem.fromJson(item));
     }
   } else {
-    // If that response was not OK, throw an error.
     throw Exception('Failed to load news');
   }
 }

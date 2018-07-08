@@ -1,8 +1,9 @@
-import 'dart:async';
+// import 'dart:async';
 import 'dart:convert';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cnbeta/news_item.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:cnbeta/news_item.dart';
 
 void main() => runApp(new MyApp());
 
@@ -46,7 +47,10 @@ class ContentState extends State<Content> {
         return new ListTile(
           title: new Text(_newsList[index].title),
           subtitle: new Text(_newsList[index].inputtime),
-          trailing: Image.network(_newsList[index].thumb),
+          trailing: CachedNetworkImage(
+            placeholder: CircularProgressIndicator(),
+            imageUrl: _newsList[index].thumb,
+          ),
         );
       },
     );
@@ -54,10 +58,9 @@ class ContentState extends State<Content> {
 }
 
 fetchNews(List<NewsItem> result, int page) async {
-  String url = 'https://m.cnbeta.com/touch/default/timeline.json?page=' +
-      page.toString();
-  if (page == 1) {
-    url = 'https://m.cnbeta.com/touch/default/timeline.json';
+  String url = 'https://m.cnbeta.com/touch/default/timeline.json';
+  if (page != 1) {
+    url += 'page=' + page.toString();
   }
   print(url);
   final response = await http.get(url);

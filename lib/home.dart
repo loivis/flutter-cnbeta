@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 // import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cnbeta/news_item.dart';
+import 'package:cnbeta/news.dart';
+import 'package:cnbeta/news_detail.dart';
 import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
@@ -13,13 +14,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<NewsItem> _newsList = new List<NewsItem>();
+  List<News> _newsList = new List<News>();
   int _page = 1;
+  String _url = 'https://m.cnbeta.com/touch/default/timeline.json';
 
   @override
   void initState() {
     super.initState();
-    _fetchNews().then((result) {
+    _fetchNewsList().then((result) {
       setState(() {
         _newsList = result;
       });
@@ -55,23 +57,31 @@ class _HomeState extends State<Home> {
           print('news index: $index');
           print('news length: ' + _newsList.length.toString());
           if (index + 20 >= _newsList.length) {
-            _fetchNews();
+            _fetchNewsList();
           }
+          var news = _newsList[index];
           return new ListTile(
-            title: new Text(_newsList[index].title),
-            subtitle: new Text(
-                _newsList[index].label + ' | ' + _newsList[index].inputtime),
+            title: new Text(news.title),
+            subtitle: new Text(news.label + ' | ' + news.inputtime),
             trailing: new Container(
               width: 50.0,
               height: 50.0,
               decoration: new BoxDecoration(
                 shape: BoxShape.circle,
                 image: new DecorationImage(
-                  image: new NetworkImage(_newsList[index].thumb),
-                  // image: new CachedNetworkImageProvider(_newsList[index].thumb),
+                  image: new NetworkImage(news.thumb),
+                  // image: new CachedNetworkImageProvider(news.thumb),
                 ),
               ),
             ),
+            onTap: () {
+              Navigator.push(
+                context,
+                new MaterialPageRoute(
+                  builder: (context) => new NewsDetail(news),
+                ),
+              );
+            },
           );
         },
       );
@@ -80,19 +90,18 @@ class _HomeState extends State<Home> {
     return content;
   }
 
-  Future<List<NewsItem>> _fetchNews() async {
-    String url = 'https://m.cnbeta.com/touch/default/timeline.json';
+  Future<List<News>> _fetchNewsList() async {
     if (_page != 1) {
-      url += '?page=' + _page.toString();
+      _url += '?page=' + _page.toString();
     }
-    print(url);
+    print(_url);
     _page++;
 
     try {
-      final response = await http.get(url);
+      final response = await http.get(_url);
       if (response.statusCode == 200) {
         for (var item in json.decode(response.body)['result']['list']) {
-          _newsList.add(NewsItem.fromJson(item));
+          _newsList.add(News.fromJson(item));
         }
         return _newsList;
       } else {

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 // import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cnbeta/news.dart';
-import 'package:cnbeta/news_detail.dart';
+import 'package:cnbeta/news_info.dart';
+import 'package:cnbeta/news_view.dart';
 import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
@@ -14,7 +14,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  List<News> _newsList = new List<News>();
+  List<NewsInfo> _newsList = new List<NewsInfo>();
   int _page = 1;
   String _url = 'https://m.cnbeta.com/touch/default/timeline.json';
 
@@ -79,7 +79,7 @@ class _HomeState extends State<Home> {
               Navigator.push(
                 context,
                 new MaterialPageRoute(
-                  builder: (context) => new NewsDetail(news),
+                  builder: (context) => new NewsView(news),
                 ),
               );
             },
@@ -91,7 +91,7 @@ class _HomeState extends State<Home> {
     return content;
   }
 
-  Future<List<News>> _fetchNewsList() async {
+  Future<List<NewsInfo>> _fetchNewsList() async {
     if (_page != 1) {
       _url += '?page=' + _page.toString();
     }
@@ -102,7 +102,7 @@ class _HomeState extends State<Home> {
       final response = await http.get(_url);
       if (response.statusCode == 200) {
         for (var item in json.decode(response.body)['result']['list']) {
-          _newsList.add(News.fromJson(item));
+          _newsList.add(NewsInfo.fromJson(item));
         }
         return _newsList;
       } else {
@@ -111,6 +111,7 @@ class _HomeState extends State<Home> {
     } catch (e) {
       print(e.toString());
     }
+
     return null;
   }
 }

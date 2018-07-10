@@ -1,4 +1,4 @@
-class News {
+class NewsInfo {
   final String aid;
   final String bad;
   final String catid;
@@ -28,7 +28,7 @@ class News {
   final String urlShow;
   final String userId;
 
-  News({
+  NewsInfo({
     this.aid,
     this.bad,
     this.catid,
@@ -59,8 +59,8 @@ class News {
     this.userId,
   });
 
-  factory News.fromJson(Map<String, dynamic> json) {
-    return News(
+  factory NewsInfo.fromJson(Map<String, dynamic> json) {
+    return NewsInfo(
       aid: json['aid'],
       bad: json['bad'],
       catid: json['catid'],

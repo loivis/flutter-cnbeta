@@ -68,6 +68,7 @@ class _HomeState extends State<Home> {
               height: 50.0,
               decoration: new BoxDecoration(
                 shape: BoxShape.circle,
+                border: new Border.all(color: Colors.grey, width: 2.0),
                 image: new DecorationImage(
                   image: new NetworkImage(news.thumb),
                   // image: new CachedNetworkImageProvider(news.thumb),

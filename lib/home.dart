@@ -18,6 +18,7 @@ class _HomeState extends State<Home> {
   int _page = 1;
   String _baseUrl = 'https://m.cnbeta.com/touch/default/timeline.json';
   bool _updateInProgress = false;
+  ScrollController _scrollController = new ScrollController();
 
   @override
   void initState() {
@@ -44,10 +45,16 @@ class _HomeState extends State<Home> {
             )
           : new Icon(Icons.update, size: 40.0),
       onPressed: () {
+        print(DateTime.now().toString() + ': floating action button pressed');
         _page = 1;
         setState(() {
           _updateInProgress = true;
         });
+        _scrollController.animateTo(
+          0.0,
+          duration: new Duration(milliseconds: 500),
+          curve: Curves.linear,
+        );
         _getNewsList().then((result) {
           setState(() {
             _newsList = result;
@@ -68,6 +75,7 @@ class _HomeState extends State<Home> {
     } else {
       content = ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
+        controller: _scrollController,
         itemBuilder: (context, i) {
           // print('builder index: $i');
           if (i.isOdd) {

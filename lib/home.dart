@@ -17,6 +17,7 @@ class _HomeState extends State<Home> {
   List<NewsInfo> _newsList = new List<NewsInfo>();
   int _page = 1;
   String _baseUrl = 'https://m.cnbeta.com/touch/default/timeline.json';
+  bool _updateInProgress = false;
 
   @override
   void initState() {
@@ -30,7 +31,30 @@ class _HomeState extends State<Home> {
       appBar: new AppBar(
         title: new Text('cnBeta 资讯'),
       ),
+      floatingActionButton: _buildFloatingActionButton(),
       body: _buildBody(context),
+    );
+  }
+
+  FloatingActionButton _buildFloatingActionButton() {
+    return new FloatingActionButton(
+      child: _updateInProgress
+          ? new CircularProgressIndicator(
+              valueColor: new AlwaysStoppedAnimation(Colors.white),
+            )
+          : new Icon(Icons.update, size: 40.0),
+      onPressed: () {
+        _page = 1;
+        setState(() {
+          _updateInProgress = true;
+        });
+        _getNewsList().then((result) {
+          setState(() {
+            _newsList = result;
+            _updateInProgress = false;
+          });
+        });
+      },
     );
   }
 
@@ -97,6 +121,7 @@ class _HomeState extends State<Home> {
     List<NewsInfo> _result = new List<NewsInfo>();
     var _url;
 
+    print(DateTime.now().toString());
     print('news length: ' + _newsList.length.toString());
 
     if (_page == 1) {

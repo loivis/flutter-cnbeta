@@ -1,10 +1,10 @@
-import 'package:flutter/material.dart';
 import 'dart:async';
 import 'dart:convert';
 // import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:cnbeta/news_info.dart';
 import 'package:cnbeta/news_view.dart';
-import 'package:http/http.dart' as http;
 
 class Home extends StatefulWidget {
   @override
@@ -90,7 +90,12 @@ class _HomeState extends State<Home> {
           }
           var news = _newsList[index];
           return new ListTile(
-            title: new Text(news.title),
+            title: news.title.startsWith('<')
+                ? new Text(
+                    news.title.replaceAll(new RegExp('</span>|<span.*">'), ''),
+                    style: TextStyle(
+                        color: Colors.red, fontWeight: FontWeight.bold))
+                : new Text(news.title),
             subtitle: new Text(news.label + ' | ' + news.inputtime),
             trailing: new Container(
               width: 50.0,

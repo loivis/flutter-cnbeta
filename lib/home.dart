@@ -16,16 +16,12 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> {
   List<NewsInfo> _newsList = new List<NewsInfo>();
   int _page = 1;
-  String _url = 'https://m.cnbeta.com/touch/default/timeline.json';
+  String _baseUrl = 'https://m.cnbeta.com/touch/default/timeline.json';
 
   @override
   void initState() {
     super.initState();
-    _fetchNewsList().then((result) {
-      setState(() {
-        _newsList = result;
-      });
-    });
+    _loadLatest();
   }
 
   @override
@@ -49,15 +45,16 @@ class _HomeState extends State<Home> {
       content = ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: (context, i) {
-          print('builder index: $i');
+          // print('builder index: $i');
           if (i.isOdd) {
             return new Divider();
           }
           final index = i ~/ 2;
-          print('news index: $index');
-          print('news length: ' + _newsList.length.toString());
+          // print('news index: $index');
           if (index + 20 >= _newsList.length) {
-            _fetchNewsList();
+            _getNewsList().then((result) {
+              _newsList.addAll(result);
+            });
           }
           var news = _newsList[index];
           return new ListTile(
@@ -88,12 +85,24 @@ class _HomeState extends State<Home> {
       );
     }
 
-    return content;
+    var _refreshIndicator = new RefreshIndicator(
+      onRefresh: _loadLatest,
+      child: content,
+    );
+
+    return _refreshIndicator;
   }
 
-  Future<List<NewsInfo>> _fetchNewsList() async {
-    if (_page != 1) {
-      _url += '?page=' + _page.toString();
+  Future<List<NewsInfo>> _getNewsList() async {
+    List<NewsInfo> _result = new List<NewsInfo>();
+    var _url;
+
+    print('news length: ' + _newsList.length.toString());
+
+    if (_page == 1) {
+      _url = _baseUrl;
+    } else {
+      _url = _baseUrl + '?page=' + _page.toString();
     }
     print(_url);
     _page++;
@@ -102,9 +111,9 @@ class _HomeState extends State<Home> {
       final response = await http.get(_url);
       if (response.statusCode == 200) {
         for (var item in json.decode(response.body)['result']['list']) {
-          _newsList.add(NewsInfo.fromJson(item));
+          _result.add(NewsInfo.fromJson(item));
         }
-        return _newsList;
+        return _result;
       } else {
         throw Exception('Failed to load news');
       }
@@ -113,5 +122,14 @@ class _HomeState extends State<Home> {
     }
 
     return null;
+  }
+
+  Future<Null> _loadLatest() async {
+    _page = 1;
+    var result = await _getNewsList();
+
+    setState(() {
+      _newsList = result;
+    });
   }
 }

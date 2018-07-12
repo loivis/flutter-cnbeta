@@ -22,7 +22,7 @@ class _NewsViewState extends State<NewsView> {
   @override
   void initState() {
     super.initState();
-    _fetchArticleBody().then((result) {
+    _getArticleBody().then((result) {
       setState(() {
         _articleBody = result;
       });
@@ -51,10 +51,10 @@ class _NewsViewState extends State<NewsView> {
     return _content;
   }
 
-  Future<String> _fetchArticleBody() async {
+  Future<String> _getArticleBody() async {
     final _url = 'https://m.cnbeta.com' + widget.newsInfo.url;
 
-    // TODO: how to fetch js generated content: article-body, article-summary?
+    // TODO: how to get js generated content: article-body, article-summary?
     try {
       print(_url);
       final response = await http.get(_url);

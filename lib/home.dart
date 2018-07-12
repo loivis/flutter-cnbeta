@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 // import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:flutter/material.dart';
 import 'package:cnbeta/news_info.dart';
 import 'package:cnbeta/news_view.dart';
 
@@ -18,12 +18,20 @@ class _HomeState extends State<Home> {
   int _page = 1;
   String _baseUrl = 'https://m.cnbeta.com/touch/default/timeline.json';
   bool _updateInProgress = false;
+  bool _loadNextPage = false;
   ScrollController _scrollController = new ScrollController();
 
   @override
   void initState() {
     super.initState();
+    _scrollController.addListener(_scrollListener);
     _loadLatest();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _scrollController.removeListener(_scrollListener);
   }
 
   @override
@@ -76,18 +84,13 @@ class _HomeState extends State<Home> {
       content = ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
+        itemCount: _newsList.length,
         itemBuilder: (context, i) {
           // print('builder index: $i');
           if (i.isOdd) {
             return new Divider();
           }
           final index = i ~/ 2;
-          // print('news index: $index');
-          if (index + 20 >= _newsList.length) {
-            _getNewsList().then((result) {
-              _newsList.addAll(result);
-            });
-          }
           var news = _newsList[index];
           return new ListTile(
             title: news.title.startsWith('<')
@@ -146,7 +149,9 @@ class _HomeState extends State<Home> {
     _page++;
 
     try {
+      _loadNextPage = true;
       final response = await http.get(_url);
+      _loadNextPage = false;
       if (response.statusCode == 200) {
         for (var item in json.decode(response.body)['result']['list']) {
           _result.add(NewsInfo.fromJson(item));
@@ -169,5 +174,17 @@ class _HomeState extends State<Home> {
     setState(() {
       _newsList = result;
     });
+  }
+
+  void _scrollListener() {
+    // print(_scrollController.position.extentAfter);
+    if (_scrollController.position.extentAfter < 888 && !_loadNextPage) {
+      print('over scroll loading');
+      _getNewsList().then((result) {
+        setState(() {
+          _newsList.addAll(result);
+        });
+      });
+    }
   }
 }

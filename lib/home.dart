@@ -97,13 +97,13 @@ class _HomeState extends State<Home> {
     );
   }
 
-  Widget _buildListViewItem(BuildContext context, int i) {
+  Widget _buildListViewItem(BuildContext context, int index) {
     // print('builder index: $i');
-    if (i.isOdd) {
+    final newsIndex = index ~/ 2;
+    if (index.isOdd) {
       return new Divider();
     }
-    final index = i ~/ 2;
-    var news = _newsList[index];
+    var news = _newsList[newsIndex];
     return new ListTile(
       title: news.title.startsWith('<')
           ? new Text(
@@ -111,7 +111,23 @@ class _HomeState extends State<Home> {
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
             )
           : new Text(news.title),
-      subtitle: new Text(news.label + ' | ' + news.inputtime),
+      // subtitle: new Text(news.label + ' | ' + news.inputtime),
+      subtitle: new Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: <Widget>[
+          new Container(
+            child: new Text(news.label + ' | ' + news.inputtime),
+          ),
+          new Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: <Widget>[
+              new Text(news.good),
+              new Icon(Icons.thumbs_up_down, color: Colors.grey),
+              new Text(news.bad),
+            ],
+          ),
+        ],
+      ),
       trailing: new Container(
         width: 50.0,
         height: 50.0,

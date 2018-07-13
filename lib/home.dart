@@ -99,11 +99,28 @@ class _HomeState extends State<Home> {
 
   Widget _buildListViewItem(BuildContext context, int index) {
     // print('builder index: $i');
-    final newsIndex = index ~/ 2;
-    if (index.isOdd) {
+    var newsIndex = index ~/ 2;
+    var news = _newsList[newsIndex];
+    var _newsSpliter = new Container(
+      child: new Row(
+        children: <Widget>[
+          new Icon(Icons.today),
+          new Text(news.inputtime.substring(0, 10).trim()),
+        ],
+      ),
+      decoration: new BoxDecoration(color: Colors.black26),
+    );
+    if (index == 0) {
+      return _newsSpliter;
+      // return new Text(news.inputtime);
+    }
+    if (index.isEven) {
+      if (news.inputtime.substring(0, 10) !=
+          _newsList[newsIndex - 1].inputtime.substring(0, 10)) {
+        return _newsSpliter;
+      }
       return new Divider();
     }
-    var news = _newsList[newsIndex];
     return new ListTile(
       title: news.title.startsWith('<')
           ? new Text(

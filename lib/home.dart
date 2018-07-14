@@ -5,6 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:cnbeta/news_info.dart';
 import 'package:cnbeta/news_view.dart';
+import 'package:intl/intl.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -105,7 +106,7 @@ class _HomeState extends State<Home> {
       child: new Row(
         children: <Widget>[
           new Icon(Icons.today),
-          new Text(news.inputtime.substring(0, 10).trim()),
+          new Text(_getNewsDate(news)),
         ],
       ),
       decoration: new BoxDecoration(color: Colors.black26),
@@ -222,4 +223,14 @@ class _HomeState extends State<Home> {
       });
     }
   }
+}
+
+String _getNewsDate(NewsInfo news) {
+  var _inputtime = news.inputtime.split(' ')[0].split('-');
+  var _year = int.parse(_inputtime[0]);
+  var _month = int.parse(_inputtime[1]);
+  var _day = int.parse(_inputtime[2]);
+  var _date = new DateTime(_year, _month, _day);
+  var _formatter = new DateFormat('yyyy-MM-dd EEEE', 'zh_CN');
+  return _formatter.format(_date);
 }

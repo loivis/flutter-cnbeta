@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:cnbeta/news_info.dart';
 import 'package:cnbeta/news_view.dart';
 import 'package:intl/intl.dart';
+import 'package:intl/date_symbol_data_local.dart' as locale;
 
 class Home extends StatefulWidget {
   @override
@@ -25,6 +26,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
+    locale.initializeDateFormatting();
     _scrollController.addListener(_scrollListener);
     _loadLatest();
   }

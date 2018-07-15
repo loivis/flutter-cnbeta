@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:cnbeta/news_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
-// import 'package:html/dom.dart' as dom;
-import 'package:flutter_html_view/flutter_html_view.dart';
+import './html_view/flutter_html_view.dart';
 
 class NewsView extends StatefulWidget {
   final NewsInfo newsInfo;
@@ -22,7 +21,6 @@ class _NewsViewState extends State<NewsView> {
   @override
   void initState() {
     super.initState();
-    print(widget._articleBody);
     if (widget._articleBody == null) {
       _getArticleBody().then((result) {
         setState(() {
@@ -64,9 +62,9 @@ class _NewsViewState extends State<NewsView> {
         var document = parse(response.body);
         var summary =
             document.getElementsByClassName('article-summary')[0].innerHtml;
-        print('summary: $summary');
+        // print('summary: $summary');
         var body = document.getElementsByClassName('article-body')[0].innerHtml;
-        print('body: $body');
+        // print('body: $body');
         return summary + '<b>正文</b>' + body;
       } else {
         throw Exception('failed to load news detail');

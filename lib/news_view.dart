@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:cnbeta/news_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
-import './html_view/flutter_html_view.dart';
+import 'package:flutter_html_view/flutter_html_view.dart';
 
 class NewsView extends StatefulWidget {
   final NewsInfo newsInfo;
-  String _articleBody;
+  List<String> _articleBody;
 
   NewsView(this.newsInfo);
 
@@ -34,25 +34,75 @@ class _NewsViewState extends State<NewsView> {
   Widget build(BuildContext context) {
     return new Scaffold(
       appBar: new AppBar(
-        title: new Text(widget.newsInfo.title),
+        title: new Text('cnBeta - ' + widget.newsInfo.label),
       ),
       body: _buildBody(),
     );
   }
 
   _buildBody() {
+    var _content;
+
+    List<Widget> _body = <Widget>[
+      new Container(
+        padding: new EdgeInsets.fromLTRB(0.0, 3.0, 0.0, 3.0),
+        child: new Text(
+          widget.newsInfo.title,
+          style: new TextStyle(
+            fontSize: 20.0,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      new Container(
+          padding: new EdgeInsets.fromLTRB(0.0, 3.0, 0.0, 3.0),
+          child: new Row(
+            children: <Widget>[
+              new Row(
+                children: <Widget>[
+                  new Icon(Icons.timer),
+                  new Text(widget.newsInfo.inputtime),
+                ],
+              ),
+              new Row(
+                children: <Widget>[
+                  new Icon(Icons.remove_red_eye),
+                  new Text(widget.newsInfo.mview),
+                ],
+              ),
+              new Row(
+                children: <Widget>[
+                  new Icon(Icons.send),
+                  new Text(widget.newsInfo.source.split('@')[0]),
+                ],
+              ),
+            ],
+          )),
+    ];
+
     if (widget._articleBody == null) {
-      return new Center(child: CircularProgressIndicator());
+      _content = new Center(child: CircularProgressIndicator());
+    } else {
+      _content = new Column(
+        children: <Widget>[
+          new Card(
+            margin: new EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+            child: new HtmlView(data: widget._articleBody[0]),
+          ),
+          new HtmlView(data: widget._articleBody[1]),
+        ],
+      );
     }
 
-    var _content = new Center(
-      child: new HtmlView(data: widget._articleBody),
-    );
+    _body.add(_content);
 
-    return _content;
+    return new ListView(
+      padding: new EdgeInsets.all(8.0),
+      children: _body,
+    );
   }
 
-  Future<String> _getArticleBody() async {
+  Future<List<String>> _getArticleBody() async {
     final _url = 'https://m.cnbeta.com' + widget.newsInfo.url;
 
     try {
@@ -65,7 +115,7 @@ class _NewsViewState extends State<NewsView> {
         // print('summary: $summary');
         var body = document.getElementsByClassName('article-body')[0].innerHtml;
         // print('body: $body');
-        return summary + '<b>正文</b>' + body;
+        return <String>[summary, body];
       } else {
         throw Exception('failed to load news detail');
       }

@@ -1,7 +1,7 @@
 name: cnbeta
 description: A new Flutter project.
 
-version: 1.0.0+1
+version: 0.0.1+1
 
 dependencies:
   flutter:
@@ -10,21 +10,13 @@ dependencies:
   http: ^0.11.3
   cached_network_image: any
   intl: any
-
   flutter_html_view: any
-  flutter_custom_tabs: "^0.1.0"
-  html: "^0.13.3"
-  video_player: "^0.5.2"
-
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-
-
 flutter:
-
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:

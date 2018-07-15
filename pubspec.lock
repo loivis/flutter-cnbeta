@@ -91,7 +91,7 @@ packages:
     source: hosted
     version: "0.1.1"
   flutter_custom_tabs:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_custom_tabs
       url: "https://pub.dartlang.org"
@@ -124,7 +124,7 @@ packages:
     source: hosted
     version: "1.1.6"
   html:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: html
       url: "https://pub.dartlang.org"
@@ -423,7 +423,7 @@ packages:
     source: hosted
     version: "2.0.6"
   video_player:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: video_player
       url: "https://pub.dartlang.org"

@@ -49,14 +49,14 @@ class _HomeState extends State<Home> {
   }
 
   Widget _buildBody(BuildContext context) {
-    var content;
+    var _content;
 
     if (_newsList.isEmpty) {
-      content = new Center(
+      _content = new Center(
         child: new CircularProgressIndicator(),
       );
     } else {
-      content = ListView.builder(
+      _content = ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
         itemCount: _newsList.length,
@@ -66,7 +66,7 @@ class _HomeState extends State<Home> {
 
     var _refreshIndicator = new RefreshIndicator(
       onRefresh: _loadLatest,
-      child: content,
+      child: _content,
     );
 
     return _refreshIndicator;

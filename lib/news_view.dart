@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'dart:async';
 import 'package:cnbeta/news_info.dart';
 import 'package:http/http.dart' as http;
-// import 'package:html/parser.dart' show parse;
+import 'package:html/parser.dart' show parse;
 // import 'package:html/dom.dart' as dom;
+import 'package:flutter_html_view/flutter_html_view.dart';
 
 class NewsView extends StatefulWidget {
   final NewsInfo newsInfo;
+  String _articleBody;
 
   NewsView(this.newsInfo);
 
@@ -17,16 +19,17 @@ class NewsView extends StatefulWidget {
 }
 
 class _NewsViewState extends State<NewsView> {
-  var _articleBody;
-
   @override
   void initState() {
     super.initState();
-    _getArticleBody().then((result) {
-      setState(() {
-        _articleBody = result;
+    print(widget._articleBody);
+    if (widget._articleBody == null) {
+      _getArticleBody().then((result) {
+        setState(() {
+          widget._articleBody = result;
+        });
       });
-    });
+    }
   }
 
   @override
@@ -40,12 +43,12 @@ class _NewsViewState extends State<NewsView> {
   }
 
   _buildBody() {
-    if (_articleBody == null) {
+    if (widget._articleBody == null) {
       return new Center(child: CircularProgressIndicator());
     }
 
     var _content = new Center(
-      child: new Text(_articleBody),
+      child: new HtmlView(data: widget._articleBody),
     );
 
     return _content;
@@ -54,17 +57,17 @@ class _NewsViewState extends State<NewsView> {
   Future<String> _getArticleBody() async {
     final _url = 'https://m.cnbeta.com' + widget.newsInfo.url;
 
-    // TODO: how to get js generated content: article-body, article-summary?
     try {
       print(_url);
       final response = await http.get(_url);
       if (response.statusCode == 200) {
-        // var document = parse(response.body);
-        // print(response.body);
-        // print(document.toString());
-        // var articleBody = document.getElementsByClassName('article-body');
-        // print(articleBody);
-        return widget.newsInfo.title;
+        var document = parse(response.body);
+        var summary =
+            document.getElementsByClassName('article-summary')[0].innerHtml;
+        print('summary: $summary');
+        var body = document.getElementsByClassName('article-body')[0].innerHtml;
+        print('body: $body');
+        return summary + '<b>正文</b>' + body;
       } else {
         throw Exception('failed to load news detail');
       }

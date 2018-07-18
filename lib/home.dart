@@ -7,6 +7,7 @@ import 'package:cnbeta/news_info.dart';
 import 'package:cnbeta/news_view.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart' as locale;
+import './utils.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -127,7 +128,7 @@ class _HomeState extends State<Home> {
     return new ListTile(
       title: news.title.startsWith('<')
           ? new Text(
-              news.title.replaceAll(new RegExp('</span>|<span.*">'), ''),
+              normalizeTitle(news.title),
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
             )
           : new Text(news.title),

@@ -4,6 +4,7 @@ import 'package:cnbeta/news_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_html_view/flutter_html_view.dart';
+import './utils.dart';
 
 class NewsView extends StatefulWidget {
   final NewsInfo newsInfo;
@@ -47,7 +48,7 @@ class _NewsViewState extends State<NewsView> {
       new Container(
         padding: new EdgeInsets.fromLTRB(0.0, 3.0, 0.0, 3.0),
         child: new Text(
-          widget.newsInfo.title,
+          normalizeTitle(widget.newsInfo.title),
           style: new TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,

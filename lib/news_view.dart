@@ -87,6 +87,7 @@ class _NewsViewState extends State<NewsView> {
       _content = new Column(
         children: <Widget>[
           new Card(
+            color: Colors.white10,
             margin: new EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
             child: new HtmlView(data: widget._articleBody[0]),
           ),
@@ -114,7 +115,7 @@ class _NewsViewState extends State<NewsView> {
         var summary =
             document.getElementsByClassName('article-summary')[0].innerHtml;
         // print('summary: $summary');
-        // data-* attributes are not supported by flutter_html_view
+        // TODO: data-* attributes are not supported by flutter_html_view
         // https://github.com/PonnamKarthik/FlutterHtmlView/issues/13
         var body = document
             .getElementsByClassName('article-body')[0]

@@ -116,7 +116,6 @@ class _HomeState extends State<Home> {
     );
     if (index == 0) {
       return _newsSpliter;
-      // return new Text(news.inputtime);
     }
     if (index.isEven) {
       if (news.inputtime.substring(0, 10) !=

@@ -114,7 +114,12 @@ class _NewsViewState extends State<NewsView> {
         var summary =
             document.getElementsByClassName('article-summary')[0].innerHtml;
         // print('summary: $summary');
-        var body = document.getElementsByClassName('article-body')[0].innerHtml;
+        // data-* attributes are not supported by flutter_html_view
+        // https://github.com/PonnamKarthik/FlutterHtmlView/issues/13
+        var body = document
+            .getElementsByClassName('article-body')[0]
+            .innerHtml
+            .replaceAll(new RegExp('data-[a-z]+="[^\"]+"'), '');
         // print('body: $body');
         return <String>[summary, body];
       } else {

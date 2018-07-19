@@ -4,11 +4,11 @@ import 'package:cnbeta/news_info.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' show parse;
 import 'package:flutter_html_view/flutter_html_view.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import './utils.dart';
 
 class NewsView extends StatefulWidget {
   final NewsInfo newsInfo;
-  List<String> _articleBody;
 
   NewsView(this.newsInfo);
 
@@ -19,16 +19,15 @@ class NewsView extends StatefulWidget {
 }
 
 class _NewsViewState extends State<NewsView> {
+  List<String> _articleBody;
   @override
   void initState() {
     super.initState();
-    if (widget._articleBody == null) {
-      _getArticleBody().then((result) {
-        setState(() {
-          widget._articleBody = result;
-        });
+    _getArticleBody().then((result) {
+      setState(() {
+        _articleBody = result;
       });
-    }
+    });
   }
 
   @override
@@ -81,7 +80,7 @@ class _NewsViewState extends State<NewsView> {
           )),
     ];
 
-    if (widget._articleBody == null) {
+    if (_articleBody == null) {
       _content = new Center(child: CircularProgressIndicator());
     } else {
       _content = new Column(
@@ -89,9 +88,9 @@ class _NewsViewState extends State<NewsView> {
           new Card(
             color: Colors.white10,
             margin: new EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-            child: new HtmlView(data: widget._articleBody[0]),
+            child: new HtmlView(data: _articleBody[0]),
           ),
-          new HtmlView(data: widget._articleBody[1]),
+          new HtmlView(data: _articleBody[1]),
         ],
       );
     }
@@ -107,13 +106,21 @@ class _NewsViewState extends State<NewsView> {
   Future<List<String>> _getArticleBody() async {
     final _url = 'https://m.cnbeta.com' + widget.newsInfo.url;
 
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    var _result = prefs.getStringList(widget.newsInfo.sid) ?? null;
+    if (_result != null) {
+      print('return state from shared preferences');
+      return _result;
+    }
     try {
       print(_url);
       final response = await http.get(_url);
       if (response.statusCode == 200) {
         var document = parse(response.body);
-        var summary =
-            document.getElementsByClassName('article-summary')[0].innerHtml;
+        var summary = document
+            .getElementsByClassName('article-summary')[0]
+            .innerHtml
+            .replaceAll('<b>摘要：</b>', '');
         // print('summary: $summary');
         // TODO: data-* attributes are not supported by flutter_html_view
         // https://github.com/PonnamKarthik/FlutterHtmlView/issues/13
@@ -122,7 +129,9 @@ class _NewsViewState extends State<NewsView> {
             .innerHtml
             .replaceAll(new RegExp('data-[a-z]+="[^\"]+"'), '');
         // print('body: $body');
-        return <String>[summary, body];
+        _result = <String>[summary, body];
+        await prefs.setStringList(widget.newsInfo.sid, _result);
+        return _result;
       } else {
         throw Exception('failed to load news detail');
       }

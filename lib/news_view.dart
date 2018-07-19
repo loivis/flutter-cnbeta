@@ -85,6 +85,8 @@ class _NewsViewState extends State<NewsView> {
 
     if (_articleBody == null) {
       _content = new Center(child: CircularProgressIndicator());
+    } else if (_articleBody[0] == 'failure') {
+      _content = new HtmlView(data: _articleBody[2]);
     } else {
       _content = new Column(
         children: <Widget>[
@@ -143,7 +145,14 @@ class _NewsViewState extends State<NewsView> {
         await prefs.setStringList(widget.newsInfo.sid, _result);
         return _result;
       } else {
-        throw Exception('failed to load news detail');
+        var siteError =
+            document.getElementsByClassName('site-error')[0].innerHtml;
+        var tips404 = document.getElementsByClassName('tips404');
+        String statusCode = response.statusCode.toString();
+        if (tips404 != null) {
+          statusCode = '404';
+        }
+        return <String>['failure', statusCode, siteError];
       }
     } catch (e) {
       print(e.toString());

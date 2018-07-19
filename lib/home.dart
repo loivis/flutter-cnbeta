@@ -60,7 +60,7 @@ class _HomeState extends State<Home> {
       _content = ListView.builder(
         physics: AlwaysScrollableScrollPhysics(),
         controller: _scrollController,
-        itemCount: _newsList.length,
+        itemCount: _newsList.length * 2,
         itemBuilder: _buildListViewItem,
       );
     }

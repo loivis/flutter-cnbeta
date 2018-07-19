@@ -20,11 +20,14 @@ class NewsView extends StatefulWidget {
 
 class _NewsViewState extends State<NewsView> {
   List<String> _articleBody;
+  bool _refreshInProgress = false;
+
   @override
   void initState() {
     super.initState();
     _getArticleBody().then((result) {
       setState(() {
+        _refreshInProgress = false;
         _articleBody = result;
       });
     });
@@ -88,48 +91,55 @@ class _NewsViewState extends State<NewsView> {
           new Card(
             color: Colors.white10,
             margin: new EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-            child: new HtmlView(data: _articleBody[0]),
+            child: new HtmlView(data: _articleBody[1]),
           ),
-          new HtmlView(data: _articleBody[1]),
+          new HtmlView(data: _articleBody[2]),
         ],
       );
     }
 
     _body.add(_content);
 
-    return new ListView(
-      padding: new EdgeInsets.all(8.0),
-      children: _body,
+    var _refreshIndicator = new RefreshIndicator(
+      onRefresh: _refreshData,
+      child: new ListView(
+        padding: new EdgeInsets.all(8.0),
+        children: _body,
+      ),
     );
+
+    return _refreshIndicator;
   }
 
   Future<List<String>> _getArticleBody() async {
+    List<String> _result;
     final _url = 'https://m.cnbeta.com' + widget.newsInfo.url;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    var _result = prefs.getStringList(widget.newsInfo.sid) ?? null;
-    if (_result != null) {
+    _result = prefs.getStringList(widget.newsInfo.sid);
+    // if (_refreshInProgress) _result = null;
+    if (_result != null && !_refreshInProgress) {
       print('return state from shared preferences');
       return _result;
     }
     try {
       print(_url);
       final response = await http.get(_url);
+      final document = parse(response.body);
       if (response.statusCode == 200) {
-        var document = parse(response.body);
-        var summary = document
+        String summary = document
             .getElementsByClassName('article-summary')[0]
             .innerHtml
             .replaceAll('<b>摘要：</b>', '');
         // print('summary: $summary');
         // TODO: data-* attributes are not supported by flutter_html_view
         // https://github.com/PonnamKarthik/FlutterHtmlView/issues/13
-        var body = document
+        String body = document
             .getElementsByClassName('article-body')[0]
             .innerHtml
             .replaceAll(new RegExp('data-[a-z]+="[^\"]+"'), '');
         // print('body: $body');
-        _result = <String>[summary, body];
+        _result = <String>['success', summary, body];
         await prefs.setStringList(widget.newsInfo.sid, _result);
         return _result;
       } else {
@@ -140,5 +150,15 @@ class _NewsViewState extends State<NewsView> {
     }
 
     return null;
+  }
+
+  Future<Null> _refreshData() async {
+    print('refresh data');
+    _refreshInProgress = true;
+    _getArticleBody().then((result) {
+      setState(() {
+        _articleBody = result;
+      });
+    });
   }
 }

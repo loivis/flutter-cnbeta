@@ -133,14 +133,8 @@ class _NewsViewState extends State<NewsView> {
             .getElementsByClassName('article-summary')[0]
             .innerHtml
             .replaceAll('<b>摘要：</b>', '');
-        // print('summary: $summary');
-        // TODO: data-* attributes are not supported by flutter_html_view
-        // https://github.com/PonnamKarthik/FlutterHtmlView/issues/13
-        String body = document
-            .getElementsByClassName('article-body')[0]
-            .innerHtml
-            .replaceAll(new RegExp('data-[a-z]+="[^\"]+"'), '');
-        // print('body: $body');
+        String body =
+            document.getElementsByClassName('article-body')[0].innerHtml;
         _result = <String>['success', summary, body];
         await prefs.setStringList(widget.newsInfo.sid, _result);
         return _result;

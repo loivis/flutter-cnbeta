@@ -100,9 +100,9 @@ packages:
   flutter_html_view:
     dependency: "direct main"
     description:
-      name: flutter_html_view
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "../html_view"
+      relative: true
+    source: path
     version: "0.5.2"
   flutter_test:
     dependency: "direct dev"
@@ -458,5 +458,5 @@ packages:
     source: hosted
     version: "2.1.14"
 sdks:
-  dart: ">=2.0.0-dev.62.0 <=2.0.0-dev.67.0.flutter-84ca27a09e"
+  dart: ">=2.0.0-dev.62.0 <=2.0.0-dev.69.0.flutter-937ee2e8ca"
   flutter: ">=0.2.5 <2.0.0"

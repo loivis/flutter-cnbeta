@@ -14,7 +14,7 @@ class NewsView extends StatefulWidget {
 
   @override
   State<StatefulWidget> createState() {
-    return new _NewsViewState();
+    return _NewsViewState();
   }
 }
 
@@ -35,9 +35,9 @@ class _NewsViewState extends State<NewsView> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('cnBeta - ' + widget.newsInfo.label),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('cnBeta - ' + widget.newsInfo.label),
       ),
       body: _buildBody(),
     );
@@ -47,36 +47,36 @@ class _NewsViewState extends State<NewsView> {
     var _content;
 
     List<Widget> _body = <Widget>[
-      new Container(
-        padding: new EdgeInsets.fromLTRB(0.0, 3.0, 0.0, 3.0),
-        child: new Text(
+      Container(
+        padding: EdgeInsets.fromLTRB(0.0, 3.0, 0.0, 3.0),
+        child: Text(
           normalizeTitle(widget.newsInfo.title),
-          style: new TextStyle(
+          style: TextStyle(
             fontSize: 20.0,
             fontWeight: FontWeight.bold,
           ),
         ),
       ),
-      new Container(
-          padding: new EdgeInsets.fromLTRB(0.0, 3.0, 0.0, 3.0),
-          child: new Row(
+      Container(
+          padding: EdgeInsets.fromLTRB(0.0, 3.0, 0.0, 3.0),
+          child: Row(
             children: <Widget>[
-              new Row(
+              Row(
                 children: <Widget>[
-                  new Icon(Icons.timer),
-                  new Text(widget.newsInfo.inputtime),
+                  Icon(Icons.timer),
+                  Text(widget.newsInfo.inputtime),
                 ],
               ),
-              new Row(
+              Row(
                 children: <Widget>[
-                  new Icon(Icons.remove_red_eye),
-                  new Text(widget.newsInfo.mview),
+                  Icon(Icons.remove_red_eye),
+                  Text(widget.newsInfo.mview),
                 ],
               ),
-              new Row(
+              Row(
                 children: <Widget>[
-                  new Icon(Icons.send),
-                  new Text(widget.newsInfo.source.split('@')[0]),
+                  Icon(Icons.send),
+                  Text(widget.newsInfo.source.split('@')[0]),
                 ],
               ),
             ],
@@ -84,28 +84,33 @@ class _NewsViewState extends State<NewsView> {
     ];
 
     if (_articleBody == null) {
-      _content = new Center(child: CircularProgressIndicator());
-    } else if (_articleBody[0] == 'failure') {
-      _content = new HtmlView(data: _articleBody[2]);
-    } else {
-      _content = new Column(
+      _content = Column(
         children: <Widget>[
-          new Card(
+          SizedBox(height: 100.0),
+          CircularProgressIndicator(),
+        ],
+      );
+    } else if (_articleBody[0] == 'failure') {
+      _content = HtmlView(data: _articleBody[2]);
+    } else {
+      _content = Column(
+        children: <Widget>[
+          Card(
             color: Colors.white10,
-            margin: new EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
-            child: new HtmlView(data: _articleBody[1]),
+            margin: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 5.0),
+            child: HtmlView(data: _articleBody[1]),
           ),
-          new HtmlView(data: _articleBody[2]),
+          HtmlView(data: _articleBody[2]),
         ],
       );
     }
 
     _body.add(_content);
 
-    var _refreshIndicator = new RefreshIndicator(
+    var _refreshIndicator = RefreshIndicator(
       onRefresh: _refreshData,
-      child: new ListView(
-        padding: new EdgeInsets.all(8.0),
+      child: ListView(
+        padding: EdgeInsets.all(8.0),
         children: _body,
       ),
     );

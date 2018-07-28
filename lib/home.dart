@@ -12,17 +12,17 @@ import './utils.dart';
 class Home extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return new _HomeState();
+    return _HomeState();
   }
 }
 
 class _HomeState extends State<Home> {
-  List<NewsInfo> _newsList = new List<NewsInfo>();
+  List<NewsInfo> _newsList = List<NewsInfo>();
   int _page = 1;
   String _baseUrl = 'https://m.cnbeta.com/touch/default/timeline.json';
   bool _updateInProgress = false;
   bool _loadNextPage = false;
-  ScrollController _scrollController = new ScrollController();
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -40,9 +40,9 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('cnBeta 资讯'),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('cnBeta 资讯'),
       ),
       floatingActionButton: _buildFloatingActionButton(),
       body: _buildBody(context),
@@ -53,8 +53,8 @@ class _HomeState extends State<Home> {
     var _content;
 
     if (_newsList.isEmpty) {
-      _content = new Center(
-        child: new CircularProgressIndicator(),
+      _content = Center(
+        child: CircularProgressIndicator(),
       );
     } else {
       _content = ListView.builder(
@@ -65,7 +65,7 @@ class _HomeState extends State<Home> {
       );
     }
 
-    var _refreshIndicator = new RefreshIndicator(
+    var _refreshIndicator = RefreshIndicator(
       onRefresh: _loadLatest,
       child: _content,
     );
@@ -74,12 +74,12 @@ class _HomeState extends State<Home> {
   }
 
   FloatingActionButton _buildFloatingActionButton() {
-    return new FloatingActionButton(
+    return FloatingActionButton(
       child: _updateInProgress
-          ? new CircularProgressIndicator(
-              valueColor: new AlwaysStoppedAnimation(Colors.white),
+          ? CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation(Colors.white),
             )
-          : new Icon(Icons.update, size: 40.0),
+          : Icon(Icons.update, size: 40.0),
       onPressed: () {
         print(DateTime.now().toString() + ': floating action button pressed');
         _page = 1;
@@ -88,7 +88,7 @@ class _HomeState extends State<Home> {
         });
         _scrollController.animateTo(
           0.0,
-          duration: new Duration(milliseconds: 500),
+          duration: Duration(milliseconds: 500),
           curve: Curves.linear,
         );
         _getNewsList().then((result) {
@@ -105,14 +105,14 @@ class _HomeState extends State<Home> {
     // print('builder index: $i');
     var newsIndex = index ~/ 2;
     var news = _newsList[newsIndex];
-    var _newsSpliter = new Container(
-      child: new Row(
+    var _newsSpliter = Container(
+      child: Row(
         children: <Widget>[
-          new Icon(Icons.today),
-          new Text(_getNewsDate(news)),
+          Icon(Icons.today),
+          Text(_getNewsDate(news)),
         ],
       ),
-      decoration: new BoxDecoration(color: Colors.black26),
+      decoration: BoxDecoration(color: Colors.black26),
     );
     if (index == 0) {
       return _newsSpliter;
@@ -122,49 +122,49 @@ class _HomeState extends State<Home> {
           _newsList[newsIndex - 1].inputtime.substring(0, 10)) {
         return _newsSpliter;
       }
-      return new Divider();
+      return Divider();
     }
-    return new ListTile(
+    return ListTile(
       title: news.title.startsWith('<')
-          ? new Text(
+          ? Text(
               normalizeTitle(news.title),
               style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold),
             )
-          : new Text(news.title),
-      // subtitle: new Text(news.label + ' | ' + news.inputtime),
-      subtitle: new Row(
+          : Text(news.title),
+      // subtitle: Text(news.label + ' | ' + news.inputtime),
+      subtitle: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
-          new Container(
-            child: new Text(news.label + ' | ' + news.inputtime),
+          Container(
+            child: Text(news.label + ' | ' + news.inputtime),
           ),
-          new Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: <Widget>[
-              new Text(news.good),
-              new Icon(Icons.thumbs_up_down, color: Colors.grey),
-              new Text(news.bad),
+              Text(news.good),
+              Icon(Icons.thumbs_up_down, color: Colors.grey),
+              Text(news.bad),
             ],
           ),
         ],
       ),
-      trailing: new Container(
+      trailing: Container(
         width: 50.0,
         height: 50.0,
-        decoration: new BoxDecoration(
+        decoration: BoxDecoration(
           shape: BoxShape.circle,
-          border: new Border.all(color: Colors.grey, width: 2.0),
-          image: new DecorationImage(
-            image: new NetworkImage(news.thumb),
-            // image: new CachedNetworkImageProvider(news.thumb),
+          border: Border.all(color: Colors.grey, width: 2.0),
+          image: DecorationImage(
+            image: NetworkImage(news.thumb),
+            // image: CachedNetworkImageProvider(news.thumb),
           ),
         ),
       ),
       onTap: () {
         Navigator.push(
           context,
-          new MaterialPageRoute(
-            builder: (context) => new NewsView(news),
+          MaterialPageRoute(
+            builder: (context) => NewsView(news),
           ),
         );
       },
@@ -172,7 +172,7 @@ class _HomeState extends State<Home> {
   }
 
   Future<List<NewsInfo>> _getNewsList() async {
-    List<NewsInfo> _result = new List<NewsInfo>();
+    List<NewsInfo> _result = List<NewsInfo>();
     var _url;
 
     print(DateTime.now().toString());
@@ -232,7 +232,7 @@ String _getNewsDate(NewsInfo news) {
   var _year = int.parse(_inputtime[0]);
   var _month = int.parse(_inputtime[1]);
   var _day = int.parse(_inputtime[2]);
-  var _date = new DateTime(_year, _month, _day);
-  var _formatter = new DateFormat('yyyy-MM-dd EEEE', 'zh_CN');
+  var _date = DateTime(_year, _month, _day);
+  var _formatter = DateFormat('yyyy-MM-dd EEEE', 'zh_CN');
   return _formatter.format(_date);
 }

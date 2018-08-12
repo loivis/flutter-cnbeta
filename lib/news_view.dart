@@ -58,8 +58,9 @@ class _NewsViewState extends State<NewsView> {
         ),
       ),
       Container(
-          padding: EdgeInsets.fromLTRB(0.0, 3.0, 0.0, 3.0),
+          padding: EdgeInsets.symmetric(vertical: 0.0, horizontal: 3.0),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Row(
                 children: <Widget>[

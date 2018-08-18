@@ -30,11 +30,13 @@ packages:
     source: hosted
     version: "1.0.4"
   cached_network_image:
-    dependency: "direct main"
+    dependency: transitive
     description:
-      name: cached_network_image
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: fork
+      resolved-ref: "05ddb40897b5ad5a0742d5ce8e16d49839a7ebe1"
+      url: "git://github.com/loivis/flutter_cached_network_image"
+    source: git
     version: "0.4.1+1"
   charcode:
     dependency: transitive
@@ -49,7 +51,7 @@ packages:
       name: collection
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.14.6"
+    version: "1.14.11"
   convert:
     dependency: transitive
     description:
@@ -70,7 +72,7 @@ packages:
       name: csslib
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.14.4+1"
+    version: "0.14.5"
   cupertino_icons:
     dependency: "direct main"
     description:
@@ -86,23 +88,29 @@ packages:
   flutter_cache_manager:
     dependency: transitive
     description:
-      name: flutter_cache_manager
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: fork
+      resolved-ref: a89d43fa724bda12d30a0e14293d86ed6d0b1cf8
+      url: "git://github.com/loivis/flutter_cache_manager.git"
+    source: git
     version: "0.1.1"
   flutter_custom_tabs:
     dependency: transitive
     description:
-      name: flutter_custom_tabs
-      url: "https://pub.dartlang.org"
-    source: hosted
-    version: "0.1.0"
+      path: "."
+      ref: HEAD
+      resolved-ref: ccd30c7dc425aecd38e5f53ddf3766483ed5d013
+      url: "https://github.com/droibit/flutter_custom_tabs"
+    source: git
+    version: "0.2.0"
   flutter_html_view:
     dependency: "direct main"
     description:
-      path: "../html_view"
-      relative: true
-    source: path
+      path: "."
+      ref: fork
+      resolved-ref: "9ebf878242244b71b5d801a898fbe3728c087333"
+      url: "git://github.com/loivis/FlutterHtmlView.git"
+    source: git
     version: "0.5.2"
   flutter_test:
     dependency: "direct dev"
@@ -129,7 +137,7 @@ packages:
       name: html
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.3+2"
+    version: "0.13.3+3"
   http:
     dependency: "direct main"
     description:
@@ -199,14 +207,14 @@ packages:
       name: matcher
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.2+1"
+    version: "0.12.3+1"
   meta:
     dependency: transitive
     description:
       name: meta
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.5"
+    version: "1.1.6"
   mime:
     dependency: transitive
     description:
@@ -365,7 +373,7 @@ packages:
       name: string_scanner
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.0.3"
+    version: "1.0.4"
   synchronized:
     dependency: transitive
     description:
@@ -386,14 +394,14 @@ packages:
       name: test
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.12.41"
+    version: "1.3.0"
   typed_data:
     dependency: transitive
     description:
       name: typed_data
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.1.5"
+    version: "1.1.6"
   url_launcher:
     dependency: transitive
     description:
@@ -414,7 +422,7 @@ packages:
       name: uuid
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.3"
+    version: "1.0.3"
   vector_math:
     dependency: transitive
     description:
@@ -428,7 +436,7 @@ packages:
       name: video_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.5.4"
+    version: "0.6.4"
   vm_service_client:
     dependency: transitive
     description:
@@ -458,5 +466,5 @@ packages:
     source: hosted
     version: "2.1.15"
 sdks:
-  dart: ">=2.0.0-dev.62.0 <=2.0.0-dev.69.5.flutter-eab492385c"
+  dart: ">=2.0.0-dev.68.0 <3.0.0"
   flutter: ">=0.2.5 <2.0.0"

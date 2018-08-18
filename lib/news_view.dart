@@ -121,7 +121,10 @@ class _NewsViewState extends State<NewsView> {
 
   Future<List<String>> _getArticleBody() async {
     List<String> _result;
-    final _url = 'https://m.cnbeta.com' + widget.newsInfo.url;
+    // https://m.cnbeta.com/touch/articles/758651.htm
+    // https://m.cnbeta.com/view/758651.htm
+    // https://m.cnbeta.com/wap/view/758651.htm
+    String _url = 'https://m.cnbeta.com' + widget.newsInfo.url;
 
     SharedPreferences prefs = await SharedPreferences.getInstance();
     _result = prefs.getStringList(widget.newsInfo.sid);
@@ -150,7 +153,22 @@ class _NewsViewState extends State<NewsView> {
         var tips404 = document.getElementsByClassName('tips404');
         String statusCode = response.statusCode.toString();
         if (tips404 != null) {
-          statusCode = '404';
+          print('404 from /touch, try default');
+          _url = _url.replaceAll('/touch/articles/', '/view/');
+          final response = await http.get(_url);
+          final document = parse(response.body);
+          print(response.body);
+          if (response.statusCode == 200) {
+            String summary = document
+                .getElementsByClassName('article-summ')[0]
+                .innerHtml
+                .replaceAll('<b>摘要：</b>', '');
+            print('summary: $summary');
+            String body = document.getElementById('artibody').innerHtml;
+            _result = <String>['success', summary, body];
+            await prefs.setStringList(widget.newsInfo.sid, _result);
+            return _result;
+          }
         }
         return <String>['failure', statusCode, siteError];
       }

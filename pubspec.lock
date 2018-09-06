@@ -30,14 +30,12 @@ packages:
     source: hosted
     version: "1.0.4"
   cached_network_image:
-    dependency: transitive
+    dependency: "direct main"
     description:
-      path: "."
-      ref: fork
-      resolved-ref: "05ddb40897b5ad5a0742d5ce8e16d49839a7ebe1"
-      url: "git://github.com/loivis/flutter_cached_network_image"
-    source: git
-    version: "0.4.1+1"
+      name: cached_network_image
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.4.2"
   charcode:
     dependency: transitive
     description:
@@ -88,27 +86,25 @@ packages:
   flutter_cache_manager:
     dependency: transitive
     description:
-      path: "."
-      ref: fork
-      resolved-ref: a89d43fa724bda12d30a0e14293d86ed6d0b1cf8
-      url: "git://github.com/loivis/flutter_cache_manager.git"
-    source: git
-    version: "0.1.1"
+      name: flutter_cache_manager
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.2"
   flutter_custom_tabs:
     dependency: transitive
     description:
       path: "."
       ref: HEAD
-      resolved-ref: ccd30c7dc425aecd38e5f53ddf3766483ed5d013
+      resolved-ref: "709ecc940103978b52fde3d1d1ebe7951017b694"
       url: "https://github.com/droibit/flutter_custom_tabs"
     source: git
-    version: "0.2.0"
+    version: "0.4.0"
   flutter_html_view:
     dependency: "direct main"
     description:
       path: "."
       ref: fork
-      resolved-ref: "9ebf878242244b71b5d801a898fbe3728c087333"
+      resolved-ref: "8b7c0cd0be8d600b65dbbf00af021cbfeb5e9e12"
       url: "git://github.com/loivis/FlutterHtmlView.git"
     source: git
     version: "0.5.2"
@@ -436,7 +432,7 @@ packages:
       name: video_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.6.4"
+    version: "0.6.5"
   vm_service_client:
     dependency: transitive
     description:

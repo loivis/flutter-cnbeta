@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
-// import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:cnbeta/news_info.dart';
@@ -155,8 +155,8 @@ class _HomeState extends State<Home> {
           shape: BoxShape.circle,
           border: Border.all(color: Colors.grey, width: 2.0),
           image: DecorationImage(
-            image: NetworkImage(news.thumb),
-            // image: CachedNetworkImageProvider(news.thumb),
+            // image: NetworkImage(news.thumb),
+            image: CachedNetworkImageProvider(news.thumb),
           ),
         ),
       ),

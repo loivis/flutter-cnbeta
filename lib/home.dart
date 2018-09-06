@@ -118,8 +118,8 @@ class _HomeState extends State<Home> {
       return _newsSpliter;
     }
     if (index.isEven) {
-      if (news.inputtime.substring(0, 10) !=
-          _newsList[newsIndex - 1].inputtime.substring(0, 10)) {
+      if (news.inputtime.split(' ')[0] !=
+          _newsList[newsIndex - 1].inputtime.split(' ')[0]) {
         return _newsSpliter;
       }
       return Divider();
@@ -155,7 +155,6 @@ class _HomeState extends State<Home> {
           shape: BoxShape.circle,
           border: Border.all(color: Colors.grey, width: 2.0),
           image: DecorationImage(
-            // image: NetworkImage(news.thumb),
             image: CachedNetworkImageProvider(news.thumb),
           ),
         ),
